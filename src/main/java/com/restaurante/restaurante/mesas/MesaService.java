@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.restaurante.restaurante.mesas.dto.MesaDto;
 import com.restaurante.restaurante.mesas.entity.Mesa;
 import com.restaurante.restaurante.mesas.repository.MesaRepository;
+import com.restaurante.restaurante.mesas.response.MesaResponse;
 import com.restaurante.restaurante.utils.ApiResponse;
 
 @Service
@@ -16,39 +17,43 @@ public class MesaService {
     @Autowired
     private MesaRepository mesaRepository;
 
-    public ResponseEntity<ApiResponse<List<Mesa>>> listarMesas() {
+    public ResponseEntity<ApiResponse<List<MesaResponse>>> listarMesas() {
         List<Mesa> mesas = mesaRepository.findAll();
-        ApiResponse<List<Mesa>> response = new ApiResponse<>(200, "Mesas obtenidas exitosamente", mesas);
+        ApiResponse<List<MesaResponse>> response = new ApiResponse<>(200, "Mesas obtenidas exitosamente",
+                MesaResponse.toResponse(mesas));
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<ApiResponse<Mesa>> obtenerMesaPorId(Long id) {
+    public ResponseEntity<ApiResponse<MesaResponse>> obtenerMesaPorId(Long id) {
         Mesa mesa = mesaRepository.findById(id).orElse(null);
         if (mesa == null) {
-            ApiResponse<Mesa> response = new ApiResponse<>(404, "Mesa no encontrada", null);
+            ApiResponse<MesaResponse> response = new ApiResponse<>(404, "Mesa no encontrada", null);
             return ResponseEntity.status(404).body(response);
         }
-        ApiResponse<Mesa> response = new ApiResponse<>(200, "Mesa obtenida exitosamente", mesa);
+        ApiResponse<MesaResponse> response = new ApiResponse<>(200, "Mesa obtenida exitosamente",
+                MesaResponse.fromEntity(mesa));
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<ApiResponse<Mesa>> crearMesa(MesaDto mesa) {
+    public ResponseEntity<ApiResponse<MesaResponse>> crearMesa(MesaDto mesa) {
         Mesa nuevaMesa = mesa.toEntity();
         mesaRepository.save(nuevaMesa);
-        ApiResponse<Mesa> response = new ApiResponse<>(201, "Mesa creada exitosamente", nuevaMesa);
+        ApiResponse<MesaResponse> response = new ApiResponse<>(201, "Mesa creada exitosamente",
+                MesaResponse.fromEntity(nuevaMesa));
         return ResponseEntity.status(201).body(response);
     }
 
-    public ResponseEntity<ApiResponse<Mesa>> actualizarMesa(Long id, MesaDto mesaDto) {
+    public ResponseEntity<ApiResponse<MesaResponse>> actualizarMesa(Long id, MesaDto mesaDto) {
         Mesa mesaExistente = mesaRepository.findById(id).orElse(null);
         if (mesaExistente == null) {
-            ApiResponse<Mesa> response = new ApiResponse<>(404, "Mesa no encontrada", null);
+            ApiResponse<MesaResponse> response = new ApiResponse<>(404, "Mesa no encontrada", null);
             return ResponseEntity.status(404).body(response);
         }
         mesaExistente.setNumero(mesaDto.getNumeroMesa());
         mesaExistente.setCapacidad(mesaDto.getCapacidad());
         mesaRepository.save(mesaExistente);
-        ApiResponse<Mesa> response = new ApiResponse<>(200, "Mesa actualizada exitosamente", mesaExistente);
+        ApiResponse<MesaResponse> response = new ApiResponse<>(200, "Mesa actualizada exitosamente",
+                MesaResponse.fromEntity(mesaExistente));
         return ResponseEntity.ok(response);
     }
 

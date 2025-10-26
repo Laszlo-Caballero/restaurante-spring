@@ -22,8 +22,8 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     @GetMapping
-    public ResponseEntity<String> obtenerPedidos() {
-        return ResponseEntity.ok("Lista de pedidos");
+    public ResponseEntity<?> obtenerPedidos() {
+        return pedidoService.listarPedidos();
     }
 
     @GetMapping("/detalle/{id}")
