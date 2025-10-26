@@ -1,5 +1,7 @@
 package com.restaurante.restaurante.mesas.dto;
 
+import java.util.List;
+
 import com.restaurante.restaurante.mesas.entity.Mesa;
 
 import jakarta.validation.constraints.Min;
@@ -21,6 +23,7 @@ public class MesaDto {
         mesa.setNumero(this.numeroMesa);
         mesa.setCapacidad(this.capacidad);
         mesa.setDisponible(true);
+        mesa.setPedidos(List.of());
         return mesa;
     }
 }

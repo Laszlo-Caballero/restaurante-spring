@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.restaurante.restaurante.pedido.dto.PedidoDto;
-import com.restaurante.restaurante.view.Views;
 
 import jakarta.validation.Valid;
 
@@ -24,37 +22,31 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     @GetMapping
-    @JsonView(Views.PedidoView.class)
-    public ResponseEntity<String> obtenerPedidos() {
-        return ResponseEntity.ok("Lista de pedidos");
+    public ResponseEntity<?> obtenerPedidos() {
+        return pedidoService.listarPedidos();
     }
 
     @GetMapping("/detalle/{id}")
-    @JsonView(Views.PedidoDetalleView.class)
     public ResponseEntity<?> obtenerDetallePedido(@PathVariable Long id) {
         return pedidoService.detalles(id);
     }
 
     @PostMapping
-    @JsonView(Views.PedidoView.class)
     public ResponseEntity<?> crearPedido(@Valid @RequestBody PedidoDto pedidoDto) {
         return pedidoService.crearPedido(pedidoDto);
     }
 
     @PutMapping("/agregar-item/{id}")
-    @JsonView(Views.PedidoView.class)
     public ResponseEntity<String> agregarItemPedido(@PathVariable Long id) {
         return ResponseEntity.ok("Item agregado al pedido " + id);
     }
 
     @PutMapping("/completar/{id}")
-    @JsonView(Views.PedidoView.class)
     public ResponseEntity<String> completarPedido(@PathVariable Long id) {
         return ResponseEntity.ok("Pedido " + id + " completado");
     }
 
     @DeleteMapping("/cancelar/{id}")
-    @JsonView(Views.PedidoView.class)
     public ResponseEntity<String> cancelarPedido(@PathVariable Long id) {
         return ResponseEntity.ok("Pedido " + id + " cancelado");
     }
