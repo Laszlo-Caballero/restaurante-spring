@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.restaurante.restaurante.categoria.entity.Categoria;
+import com.restaurante.restaurante.pedido.entity.Pedido;
 import com.restaurante.restaurante.view.Views;
 
 import jakarta.persistence.CascadeType;
@@ -43,4 +44,9 @@ public class Comida {
     @JoinTable(name = "comida_categoria", joinColumns = @JoinColumn(name = "comida_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
     @JsonView(Views.ComidaView.class)
     List<Categoria> categorias;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "pedido_comida", joinColumns = @JoinColumn(name = "comida_id"), inverseJoinColumns = @JoinColumn(name = "pedido_id"))
+    @JsonView(Views.ComidaView.class)
+    List<Pedido> pedidos;
 }

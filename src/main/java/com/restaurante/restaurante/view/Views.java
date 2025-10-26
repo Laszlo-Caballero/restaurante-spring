@@ -6,4 +6,10 @@ public class Views {
 
     public static class CategoriaView {
     }
+
+    public static class PedidoView {
+    }
+
+    public static class MesaView {
+    }
 }
