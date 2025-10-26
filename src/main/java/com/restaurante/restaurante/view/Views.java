@@ -10,6 +10,9 @@ public class Views {
     public static class PedidoView {
     }
 
+    public static class PedidoDetalleView {
+    }
+
     public static class MesaView {
     }
 }

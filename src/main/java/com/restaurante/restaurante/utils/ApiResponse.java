@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonView({ Views.ComidaView.class, Views.CategoriaView.class })
+@JsonView({ Views.ComidaView.class, Views.CategoriaView.class, Views.PedidoView.class, Views.MesaView.class,
+        Views.PedidoDetalleView.class })
 public class ApiResponse<T> {
     private int code;
 

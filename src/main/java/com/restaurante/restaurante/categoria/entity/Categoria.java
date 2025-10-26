@@ -21,10 +21,10 @@ import lombok.Data;
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView({ Views.CategoriaView.class, Views.ComidaView.class })
+    @JsonView({ Views.CategoriaView.class, Views.ComidaView.class, Views.PedidoView.class })
     private Long id;
 
-    @JsonView({ Views.CategoriaView.class, Views.ComidaView.class })
+    @JsonView({ Views.CategoriaView.class, Views.ComidaView.class, Views.PedidoView.class })
     private String nombre;
 
     @ManyToMany(mappedBy = "categorias", cascade = CascadeType.ALL)
