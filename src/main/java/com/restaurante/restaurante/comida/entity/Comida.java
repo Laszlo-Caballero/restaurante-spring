@@ -1,10 +1,14 @@
 package com.restaurante.restaurante.comida.entity;
 
-import java.util.Set;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.restaurante.restaurante.categoria.entity.Categoria;
+import com.restaurante.restaurante.view.Views;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,27 +16,31 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @Entity
 @Table
-@Getter
-@Setter
+@Data
 public class Comida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView({ Views.ComidaView.class, Views.CategoriaView.class })
     private Long comidaId;
 
+    @JsonView({ Views.ComidaView.class, Views.CategoriaView.class })
     private String nombre;
 
+    @JsonView({ Views.ComidaView.class, Views.CategoriaView.class })
     private String descripcion;
 
+    @JsonView({ Views.ComidaView.class, Views.CategoriaView.class })
     private Double precio;
 
+    @JsonView({ Views.ComidaView.class, Views.CategoriaView.class })
     private Boolean disponible;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "comida_categoria", joinColumns = @JoinColumn(name = "comida_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
-    Set<Categoria> categorias;
+    @JsonView(Views.ComidaView.class)
+    List<Categoria> categorias;
 }

@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.restaurante.restaurante.comida.dto.ComidaDto;
 import com.restaurante.restaurante.utils.ApiResponse;
+import com.restaurante.restaurante.view.Views;
 
 import jakarta.validation.Valid;
 
@@ -24,26 +26,31 @@ public class ComidaController {
     private ComidaService comidaService;
 
     @GetMapping
+    @JsonView(Views.ComidaView.class)
     public ApiResponse<?> getAllComidas() {
         return comidaService.getAllComidas();
     }
 
     @GetMapping("/{id}")
+    @JsonView(Views.ComidaView.class)
     public ResponseEntity<?> getComidaById(@PathVariable Long id) {
         return comidaService.getComidaById(id);
     }
 
     @PostMapping()
+    @JsonView(Views.ComidaView.class)
     public ResponseEntity<?> createComida(@Valid @RequestBody ComidaDto comida) {
         return comidaService.createComida(comida);
     }
 
     @PutMapping("/{id}")
+    @JsonView(Views.ComidaView.class)
     public ResponseEntity<?> updateComida(@PathVariable Long id, @Valid @RequestBody ComidaDto comida) {
         return comidaService.updateComida(id, comida);
     }
 
     @DeleteMapping("/{id}")
+    @JsonView(Views.ComidaView.class)
     public ResponseEntity<?> deleteComida(@PathVariable Long id) {
         return comidaService.deleteComida(id);
     }

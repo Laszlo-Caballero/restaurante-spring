@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.restaurante.restaurante.categoria.respository.CategoriaRepository;
 import com.restaurante.restaurante.comida.dto.ComidaDto;
 import com.restaurante.restaurante.comida.entity.Comida;
 import com.restaurante.restaurante.comida.respository.ComidaRepository;
@@ -15,6 +16,9 @@ import com.restaurante.restaurante.utils.ApiResponse;
 public class ComidaService {
     @Autowired
     private ComidaRepository comidaRepository;
+
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     public ApiResponse<List<Comida>> getAllComidas() {
         List<Comida> comidas = comidaRepository.findAll();
@@ -31,6 +35,17 @@ public class ComidaService {
 
     public ResponseEntity<ApiResponse<Comida>> createComida(ComidaDto comidaDto) {
         Comida newComida = comidaDto.toEntity();
+
+        var categoriaIds = comidaDto.getCategoriaIds();
+
+        var findCategorias = categoriaRepository.findByIdIn(categoriaIds);
+
+        if (findCategorias.isEmpty() || findCategorias.size() != categoriaIds.size()) {
+            return ResponseEntity.status(400).body(new ApiResponse<>(400, "Algunas categorías no existen", null));
+        }
+
+        newComida.setCategorias(findCategorias);
+
         Comida nuevaComida = comidaRepository.save(newComida);
         return ResponseEntity.status(201).body(new ApiResponse<>(201, "Comida creada con éxito", nuevaComida));
     }

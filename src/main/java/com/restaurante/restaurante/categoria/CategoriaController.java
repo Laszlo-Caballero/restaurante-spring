@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.restaurante.restaurante.categoria.dto.CategoriaDto;
+import com.restaurante.restaurante.view.Views;
 
 import jakarta.validation.Valid;
 
@@ -22,26 +24,31 @@ public class CategoriaController {
     private CategoriaService categoriaService;
 
     @GetMapping
+    @JsonView(Views.CategoriaView.class)
     public ResponseEntity<?> getAllCategorias() {
         return categoriaService.getAllCategorias();
     }
 
     @GetMapping("/{id}")
+    @JsonView(Views.CategoriaView.class)
     public ResponseEntity<?> getCategoriaById(@PathVariable Long id) {
         return categoriaService.getCategoriaById(id);
     }
 
     @PostMapping
+    @JsonView(Views.CategoriaView.class)
     public ResponseEntity<?> createCategoria(@Valid @RequestBody CategoriaDto categoria) {
         return categoriaService.createCategoria(categoria);
     }
 
     @PutMapping("/{id}")
+    @JsonView(Views.CategoriaView.class)
     public ResponseEntity<?> updateCategoria(@PathVariable Long id, @Valid @RequestBody CategoriaDto categoria) {
         return categoriaService.updateCategoria(id, categoria);
     }
 
     @DeleteMapping("/{id}")
+    @JsonView(Views.CategoriaView.class)
     public ResponseEntity<?> deleteCategoria(@PathVariable Long id) {
         return categoriaService.deleteCategoria(id);
     }
