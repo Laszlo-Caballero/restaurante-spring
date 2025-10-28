@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,6 +15,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.restaurante.restaurante.auth.enums.RoleEnum;
 import com.restaurante.restaurante.exceptions.AuthExceptionHandler;
+import com.restaurante.restaurante.utils.ConfigRoutes;
+import com.restaurante.restaurante.utils.RouteConfig;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 
@@ -35,17 +36,22 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http.csrf(t -> t.disable())
                 .authorizeHttpRequests(
-                        auth -> auth.requestMatchers("api/v1/auth/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "api/v1/comidas")
-                                .hasAuthority(RoleEnum.ADMIN.name()).anyRequest().authenticated())
+                        auth -> {
+                            auth.requestMatchers("api/v1/auth/**").permitAll();
+                            for (RouteConfig r : ConfigRoutes.adminRoutes) {
+                                r.getMethods().forEach(m -> auth.requestMatchers(m, r.getPath())
+                                        .hasAuthority(RoleEnum.ADMIN.name()));
+                            }
+                            auth.anyRequest().authenticated();
+                        })
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(authExceptionHandler) // for 403 Forbidden
-                );
+                        .accessDeniedHandler(authExceptionHandler));
         return http.build();
     }
 
