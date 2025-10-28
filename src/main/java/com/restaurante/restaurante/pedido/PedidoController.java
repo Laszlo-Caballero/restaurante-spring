@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restaurante.restaurante.pedido.dto.AgregarItemDto;
+import com.restaurante.restaurante.pedido.dto.CompletarPedidoDto;
 import com.restaurante.restaurante.pedido.dto.PedidoDto;
 
 import jakarta.validation.Valid;
@@ -44,12 +45,13 @@ public class PedidoController {
     }
 
     @PutMapping("/completar/{id}")
-    public ResponseEntity<String> completarPedido(@PathVariable Long id) {
-        return ResponseEntity.ok("Pedido " + id + " completado");
+    public ResponseEntity<?> completarPedido(@PathVariable Long id,
+            @Valid @RequestBody CompletarPedidoDto completarPedidoDto) {
+        return pedidoService.completarPedido(id, completarPedidoDto);
     }
 
     @DeleteMapping("/cancelar/{id}")
-    public ResponseEntity<String> cancelarPedido(@PathVariable Long id) {
-        return ResponseEntity.ok("Pedido " + id + " cancelado");
+    public ResponseEntity<?> cancelarPedido(@PathVariable Long id) {
+        return pedidoService.cancelarPedido(id);
     }
 }

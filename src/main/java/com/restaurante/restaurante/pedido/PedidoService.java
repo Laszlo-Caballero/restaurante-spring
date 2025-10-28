@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import com.restaurante.restaurante.comida.respository.ComidaRepository;
 import com.restaurante.restaurante.mesas.repository.MesaRepository;
 import com.restaurante.restaurante.pedido.dto.AgregarItemDto;
+import com.restaurante.restaurante.pedido.dto.CompletarPedidoDto;
 import com.restaurante.restaurante.pedido.dto.PedidoDto;
 import com.restaurante.restaurante.pedido.entity.Pedido;
 import com.restaurante.restaurante.pedido.entity.PedidoComida;
+import com.restaurante.restaurante.pedido.enums.PedidoEnum;
 import com.restaurante.restaurante.pedido.repository.PedidoComidaRepository;
 import com.restaurante.restaurante.pedido.repository.PedidoRepository;
 import com.restaurante.restaurante.pedido.response.PedidoComidaResponse;
@@ -107,6 +109,13 @@ public class PedidoService {
             return ResponseEntity.status(404).body(response);
         }
 
+        var estado = findPedido.getEstado();
+        if (estado != PedidoEnum.PENDIENTE) {
+            ApiResponse<List<PedidoComidaResponse>> response = new ApiResponse<>(400,
+                    "No se pueden agregar items a un pedido que no está pendiente", null);
+            return ResponseEntity.status(400).body(response);
+        }
+
         var newItems = new ArrayList<PedidoComida>();
 
         for (var item : items.getItems()) {
@@ -138,4 +147,35 @@ public class PedidoService {
                 PedidoComidaResponse.toResponse(newItems));
         return ResponseEntity.ok(response);
     }
+
+    public ResponseEntity<ApiResponse<PedidoRaw>> completarPedido(Long id, CompletarPedidoDto completarPedidoDto) {
+        var pedido = pedidoRepository.findById(id).orElse(null);
+        if (pedido == null) {
+            ApiResponse<PedidoRaw> response = new ApiResponse<>(404, "Pedido no encontrado", null);
+            return ResponseEntity.status(404).body(response);
+        }
+
+        pedido.setEstado(PedidoEnum.PAGADO);
+        pedido.setMetodoPago(completarPedidoDto.getMetodoPago());
+
+        pedidoRepository.save(pedido);
+
+        ApiResponse<PedidoRaw> response = new ApiResponse<>(200, "Pedido completado", PedidoRaw.fromEntity(pedido));
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<ApiResponse<PedidoRaw>> cancelarPedido(Long id) {
+        var pedido = pedidoRepository.findById(id).orElse(null);
+        if (pedido == null) {
+            ApiResponse<PedidoRaw> response = new ApiResponse<>(404, "Pedido no encontrado", null);
+            return ResponseEntity.status(404).body(response);
+        }
+
+        pedido.setEstado(PedidoEnum.CANCELADO);
+        pedidoRepository.save(pedido);
+
+        ApiResponse<PedidoRaw> response = new ApiResponse<>(200, "Pedido cancelado", PedidoRaw.fromEntity(pedido));
+        return ResponseEntity.ok(response);
+    }
+
 }
