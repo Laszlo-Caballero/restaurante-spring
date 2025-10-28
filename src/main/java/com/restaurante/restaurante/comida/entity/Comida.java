@@ -16,11 +16,16 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Comida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,10 +39,17 @@ public class Comida {
 
     private Boolean disponible;
 
+    @Transient
+    private Long cantidadPedidos;
+
+    @Transient
+    private Long ventasTotales;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "comida_categoria", joinColumns = @JoinColumn(name = "comida_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
     List<Categoria> categorias;
 
     @OneToMany(mappedBy = "comida")
     List<PedidoComida> pedidoComidas;
+
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.restaurante.restaurante.categoria.respository.CategoriaRepository;
 import com.restaurante.restaurante.comida.dto.ComidaDto;
 import com.restaurante.restaurante.comida.entity.Comida;
+import com.restaurante.restaurante.comida.records.ComidaRecord;
 import com.restaurante.restaurante.comida.response.ComidaResponse;
 import com.restaurante.restaurante.comida.respository.ComidaRepository;
 import com.restaurante.restaurante.utils.ApiResponse;
@@ -22,16 +23,18 @@ public class ComidaService {
     private CategoriaRepository categoriaRepository;
 
     public ApiResponse<List<ComidaResponse>> getAllComidas() {
-        List<Comida> comidas = comidaRepository.findAll();
+        List<Comida> comidas = ComidaRecord.toResponse(comidaRepository.findAllWithCantidadTotal());
         List<ComidaResponse> comidaResponses = ComidaResponse.toResponse(comidas);
         return new ApiResponse<>(200, "Lista de comidas obtenida con éxito", comidaResponses);
     }
 
     public ResponseEntity<ApiResponse<ComidaResponse>> getComidaById(Long id) {
-        Comida comida = comidaRepository.findById(id).orElse(null);
+        Comida comida = ComidaRecord.fromEntity(
+                comidaRepository.findByIdWithCantidadTotal(id).orElse(null));
         if (comida == null) {
             return ResponseEntity.status(404).body(new ApiResponse<>(404, "Comida no encontrada", null));
         }
+
         ComidaResponse comidaResponse = ComidaResponse.fromEntity(comida);
         return ResponseEntity.ok(new ApiResponse<>(200, "Comida obtenida con éxito", comidaResponse));
     }

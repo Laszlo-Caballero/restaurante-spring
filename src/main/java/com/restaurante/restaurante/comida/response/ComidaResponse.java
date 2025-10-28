@@ -19,6 +19,8 @@ public class ComidaResponse {
     private String descripcion;
     private Double precio;
     private Boolean disponible;
+    private Long cantidadPedidos;
+    private Long ventasTotales;
     private List<CategoriaRaw> categorias;
 
     public static List<ComidaResponse> toResponse(List<Comida> comidas) {
@@ -28,6 +30,8 @@ public class ComidaResponse {
                 comida.getDescripcion(),
                 comida.getPrecio(),
                 comida.getDisponible(),
+                comida.getCantidadPedidos(),
+                comida.getVentasTotales(),
                 CategoriaRaw.toListResponse(comida.getCategorias())))
                 .collect(Collectors.toList());
     }
@@ -39,6 +43,8 @@ public class ComidaResponse {
                 comida.getDescripcion(),
                 comida.getPrecio(),
                 comida.getDisponible(),
+                comida.getCantidadPedidos(),
+                comida.getVentasTotales(),
                 CategoriaRaw.toListResponse(comida.getCategorias()));
     }
 }
