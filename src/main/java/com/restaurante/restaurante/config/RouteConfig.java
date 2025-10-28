@@ -1,4 +1,4 @@
-package com.restaurante.restaurante.utils;
+package com.restaurante.restaurante.config;
 
 import java.util.List;
 

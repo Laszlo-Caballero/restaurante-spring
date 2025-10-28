@@ -14,9 +14,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.restaurante.restaurante.auth.enums.RoleEnum;
+import com.restaurante.restaurante.config.ConfigRoutes;
+import com.restaurante.restaurante.config.RouteConfig;
 import com.restaurante.restaurante.exceptions.AuthExceptionHandler;
-import com.restaurante.restaurante.utils.ConfigRoutes;
-import com.restaurante.restaurante.utils.RouteConfig;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 
