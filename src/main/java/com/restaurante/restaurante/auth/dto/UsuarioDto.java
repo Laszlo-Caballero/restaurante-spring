@@ -1,6 +1,7 @@
 package com.restaurante.restaurante.auth.dto;
 
 import com.restaurante.restaurante.auth.entity.Usuario;
+import com.restaurante.restaurante.auth.enums.RoleEnum;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,10 +21,14 @@ public class UsuarioDto {
     @NotNull(message = "La contraseña no puede ser nula en la actualización")
     private String password;
 
+    @NotNull
+    private RoleEnum role;
+
     public Usuario toEntity() {
         Usuario usuario = new Usuario();
         usuario.setNombre(this.nombre);
         usuario.setUsername(this.username);
+        usuario.setRole(this.role);
         return usuario;
     }
 }

@@ -36,6 +36,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleSecurityException(Exception exception) {
         ApiResponse<Void> errorDetail = null;
 
+        // exception.printStackTrace();
+
+        System.out.println("Handling exception: " + exception.getClass().getName());
+        System.out.println(exception instanceof AccessDeniedException);
+
         if (exception instanceof BadCredentialsException) {
             errorDetail = new ApiResponse<>(401, "The username or password is incorrect", null);
 

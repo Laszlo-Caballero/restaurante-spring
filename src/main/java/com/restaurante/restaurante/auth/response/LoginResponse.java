@@ -10,6 +10,7 @@ public class LoginResponse extends Usuario {
         super.setNombre(usuario.getNombre());
         super.setUsername(usuario.getUsername());
         super.setPassword(usuario.getPassword());
+        super.setRole(usuario.getRole());
         this.token = token;
     }
 
