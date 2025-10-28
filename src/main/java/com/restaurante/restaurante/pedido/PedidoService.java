@@ -1,5 +1,6 @@
 package com.restaurante.restaurante.pedido;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.restaurante.restaurante.comida.respository.ComidaRepository;
 import com.restaurante.restaurante.mesas.repository.MesaRepository;
+import com.restaurante.restaurante.pedido.dto.AgregarItemDto;
 import com.restaurante.restaurante.pedido.dto.PedidoDto;
 import com.restaurante.restaurante.pedido.entity.Pedido;
 import com.restaurante.restaurante.pedido.entity.PedidoComida;
 import com.restaurante.restaurante.pedido.repository.PedidoComidaRepository;
 import com.restaurante.restaurante.pedido.repository.PedidoRepository;
+import com.restaurante.restaurante.pedido.response.PedidoComidaResponse;
 import com.restaurante.restaurante.pedido.response.PedidoRaw;
 import com.restaurante.restaurante.pedido.response.PedidoResponse;
 import com.restaurante.restaurante.utils.ApiResponse;
@@ -58,11 +61,9 @@ public class PedidoService {
             return ResponseEntity.status(404).body(response);
         }
 
-
         List<Long> comidasIds = pedidoDto.getComidas().stream()
                 .map(t -> t.getComidaId())
                 .toList();
-
 
         var comidas = comidaRepository.findByComidaIdIn(comidasIds);
 
@@ -72,7 +73,6 @@ public class PedidoService {
                     null);
             return ResponseEntity.status(404).body(response);
         }
-
 
         Pedido nuevoPedido = pedidoDto.toEntity();
         nuevoPedido.setMesa(mesa);
@@ -98,5 +98,44 @@ public class PedidoService {
         ApiResponse<PedidoResponse> response = new ApiResponse<>(201, "Pedido creado exitosamente",
                 PedidoResponse.fromEntity(nuevoPedido));
         return ResponseEntity.status(201).body(response);
+    }
+
+    public ResponseEntity<ApiResponse<List<PedidoComidaResponse>>> agregarItem(Long id, AgregarItemDto items) {
+        var findPedido = pedidoRepository.findById(id).orElse(null);
+        if (findPedido == null) {
+            ApiResponse<List<PedidoComidaResponse>> response = new ApiResponse<>(404, "Pedido no encontrado", null);
+            return ResponseEntity.status(404).body(response);
+        }
+
+        var newItems = new ArrayList<PedidoComida>();
+
+        for (var item : items.getItems()) {
+            var existing = findPedido.getPedidoComidas().stream()
+                    .filter(pc -> pc.getComida().getComidaId().equals(item.getComidaId()))
+                    .findFirst();
+
+            if (existing.isPresent()) {
+                var pedidoComida = existing.get();
+                int nuevaCantidad = pedidoComida.getCantidad() + item.getCantidad();
+                pedidoComida.setCantidad(nuevaCantidad);
+                pedidoComidaRepository.save(pedidoComida);
+                newItems.add(pedidoComida);
+            } else {
+                var nueva = new PedidoComida();
+                var comida = comidaRepository.findById(item.getComidaId())
+                        .orElseThrow(() -> new RuntimeException("Comida no encontrada"));
+
+                nueva.setComida(comida);
+                nueva.setCantidad(item.getCantidad());
+                nueva.setPedido(findPedido);
+
+                pedidoComidaRepository.save(nueva);
+                newItems.add(nueva);
+            }
+        }
+
+        ApiResponse<List<PedidoComidaResponse>> response = new ApiResponse<>(200, "Items agregados al pedido",
+                PedidoComidaResponse.toResponse(newItems));
+        return ResponseEntity.ok(response);
     }
 }

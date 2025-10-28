@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.restaurante.restaurante.pedido.dto.AgregarItemDto;
 import com.restaurante.restaurante.pedido.dto.PedidoDto;
 
 import jakarta.validation.Valid;
@@ -37,8 +38,9 @@ public class PedidoController {
     }
 
     @PutMapping("/agregar-item/{id}")
-    public ResponseEntity<String> agregarItemPedido(@PathVariable Long id) {
-        return ResponseEntity.ok("Item agregado al pedido " + id);
+    public ResponseEntity<?> agregarItemPedido(@PathVariable Long id,
+            @Valid @RequestBody AgregarItemDto agregarItemDto) {
+        return pedidoService.agregarItem(id, agregarItemDto);
     }
 
     @PutMapping("/completar/{id}")
