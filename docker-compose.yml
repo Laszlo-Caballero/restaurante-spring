@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  db_restaurante:
+    image: postgres:16
+    container_name: restaurante_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: restaurante
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - restaurante_network
+
+  app_restaurante:
+    build: .
+    container_name: restaurante_app
+    restart: always
+    depends_on:
+      - db_restaurante
+    environment:
+      DB_HOST: jdbc:postgresql://db_restaurante:5432/restaurante
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8080:8080"
+    networks:
+      - restaurante_network
+
+networks:
+  restaurante_network:
+    driver: bridge
+
+volumes:
+  pgdata:
