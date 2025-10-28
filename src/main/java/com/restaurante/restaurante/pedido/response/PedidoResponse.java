@@ -3,7 +3,6 @@ package com.restaurante.restaurante.pedido.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.restaurante.restaurante.comida.response.ComidaResponse;
 import com.restaurante.restaurante.mesas.response.MesaRaw;
 import com.restaurante.restaurante.pedido.entity.Pedido;
 import com.restaurante.restaurante.pedido.enums.PedidoEnum;
@@ -22,7 +21,7 @@ public class PedidoResponse {
     private PedidoEnum estado;
     private MesaRaw mesa;
     private Double total;
-    private List<ComidaResponse> comida;
+    private List<PedidoComidaResponse> comidas;
 
     public static PedidoResponse fromEntity(Pedido pedido) {
         return new PedidoResponse(
@@ -32,7 +31,7 @@ public class PedidoResponse {
                 pedido.getEstado(),
                 MesaRaw.fromEntity(pedido.getMesa()),
                 pedido.getTotal(),
-                ComidaResponse.toResponse(pedido.getComidas()));
+                PedidoComidaResponse.toResponse(pedido.getPedidoComidas()));
     }
 
     public static List<PedidoResponse> toResponse(List<Pedido> pedidos) {

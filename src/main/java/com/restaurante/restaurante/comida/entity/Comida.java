@@ -2,9 +2,8 @@ package com.restaurante.restaurante.comida.entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.restaurante.restaurante.categoria.entity.Categoria;
-import com.restaurante.restaurante.pedido.entity.Pedido;
+import com.restaurante.restaurante.pedido.entity.PedidoComida;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -15,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -38,7 +38,6 @@ public class Comida {
     @JoinTable(name = "comida_categoria", joinColumns = @JoinColumn(name = "comida_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
     List<Categoria> categorias;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "comidas")
-    @JsonIgnore
-    List<Pedido> pedidos;
+    @OneToMany(mappedBy = "comida")
+    List<PedidoComida> pedidoComidas;
 }
