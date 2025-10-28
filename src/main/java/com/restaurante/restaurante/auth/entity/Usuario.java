@@ -8,14 +8,17 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.restaurante.restaurante.auth.enums.RoleEnum;
+import com.restaurante.restaurante.pedido.entity.PedidoComida;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -37,6 +40,9 @@ public class Usuario implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
+    private List<PedidoComida> pedidos;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

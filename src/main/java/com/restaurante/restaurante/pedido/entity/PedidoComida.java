@@ -1,5 +1,6 @@
 package com.restaurante.restaurante.pedido.entity;
 
+import com.restaurante.restaurante.auth.entity.Usuario;
 import com.restaurante.restaurante.comida.entity.Comida;
 
 import jakarta.persistence.Entity;
@@ -31,6 +32,9 @@ public class PedidoComida {
     @JoinColumn(name = "comida_id")
     private Comida comida;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
     private Integer cantidad;
 }

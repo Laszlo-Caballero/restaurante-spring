@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.restaurante.restaurante.auth.entity.Usuario;
 import com.restaurante.restaurante.comida.respository.ComidaRepository;
 import com.restaurante.restaurante.mesas.repository.MesaRepository;
 import com.restaurante.restaurante.pedido.dto.AgregarItemDto;
@@ -53,9 +56,11 @@ public class PedidoService {
     }
 
     public ResponseEntity<ApiResponse<PedidoResponse>> crearPedido(PedidoDto pedidoDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Usuario usuario = (Usuario) authentication.getPrincipal();
 
         var mesaId = pedidoDto.getMesaId();
-
         var mesa = mesaRepository.findById(mesaId).orElse(null);
 
         if (mesa == null) {
@@ -92,6 +97,7 @@ public class PedidoService {
                     pc.setComida(c);
                     pc.setCantidad(cantidad);
                     pc.setPedido(nuevoPedido);
+                    pc.setUsuario(usuario);
                     pedidoComidaRepository.save(pc);
                     return pc;
                 }).toList();
@@ -103,6 +109,11 @@ public class PedidoService {
     }
 
     public ResponseEntity<ApiResponse<List<PedidoComidaResponse>>> agregarItem(Long id, AgregarItemDto items) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+
         var findPedido = pedidoRepository.findById(id).orElse(null);
         if (findPedido == null) {
             ApiResponse<List<PedidoComidaResponse>> response = new ApiResponse<>(404, "Pedido no encontrado", null);
@@ -127,6 +138,7 @@ public class PedidoService {
                 var pedidoComida = existing.get();
                 int nuevaCantidad = pedidoComida.getCantidad() + item.getCantidad();
                 pedidoComida.setCantidad(nuevaCantidad);
+                pedidoComida.setUsuario(usuario);
                 pedidoComidaRepository.save(pedidoComida);
                 newItems.add(pedidoComida);
             } else {
@@ -137,7 +149,7 @@ public class PedidoService {
                 nueva.setComida(comida);
                 nueva.setCantidad(item.getCantidad());
                 nueva.setPedido(findPedido);
-
+                nueva.setUsuario(usuario);
                 pedidoComidaRepository.save(nueva);
                 newItems.add(nueva);
             }

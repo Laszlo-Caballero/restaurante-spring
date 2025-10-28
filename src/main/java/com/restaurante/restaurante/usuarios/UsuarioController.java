@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.restaurante.restaurante.auth.entity.Usuario;
-import com.restaurante.restaurante.utils.ApiResponse;
-
 @RestController
 @RequestMapping("api/v1/usuarios")
 public class UsuarioController {
@@ -17,7 +14,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping("/perfil")
-    public ResponseEntity<ApiResponse<Usuario>> obtenerPerfil() {
+    public ResponseEntity<?> obtenerPerfil() {
         return usuarioService.obtenerPerfil();
     }
 }
