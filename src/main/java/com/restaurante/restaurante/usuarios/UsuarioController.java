@@ -17,4 +17,9 @@ public class UsuarioController {
     public ResponseEntity<?> obtenerPerfil() {
         return usuarioService.obtenerPerfil();
     }
+
+    @GetMapping
+    public ResponseEntity<?> obtenerUsuarios() {
+        return usuarioService.listarUsuarios();
+    }
 }

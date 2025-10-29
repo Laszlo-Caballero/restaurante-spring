@@ -16,6 +16,6 @@ public class ConfigRoutes {
                         RouteConfig.builder().methods(List.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE))
                                         .path("api/v1/categorias/**").build(),
                         RouteConfig.builder().methods(List.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE))
-                                        .path("api/v1/mesas/**").build());
-
+                                        .path("api/v1/mesas/**").build(),
+                        RouteConfig.builder().methods(List.of(HttpMethod.GET)).path("api/v1/usuarios").build());
 }
