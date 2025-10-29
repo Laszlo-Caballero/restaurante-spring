@@ -12,6 +12,7 @@ import com.restaurante.restaurante.comida.entity.Comida;
 import com.restaurante.restaurante.comida.records.ComidaRecord;
 import com.restaurante.restaurante.comida.response.ComidaResponse;
 import com.restaurante.restaurante.comida.respository.ComidaRepository;
+import com.restaurante.restaurante.recursos.repository.RecursoRepository;
 import com.restaurante.restaurante.utils.ApiResponse;
 
 @Service
@@ -21,6 +22,9 @@ public class ComidaService {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private RecursoRepository recursoRepository;
 
     public ApiResponse<List<ComidaResponse>> getAllComidas() {
         List<Comida> comidas = ComidaRecord.toResponse(comidaRepository.findAllWithCantidadTotal());
@@ -52,6 +56,14 @@ public class ComidaService {
 
         newComida.setCategorias(findCategorias);
 
+        var findRecurso = recursoRepository.findById(comidaDto.getRecursoId()).orElse(null);
+
+        if (findRecurso == null) {
+            return ResponseEntity.status(400).body(new ApiResponse<>(400, "Recurso no encontrado", null));
+        }
+
+        newComida.setRecurso(findRecurso);
+
         Comida nuevaComida = comidaRepository.save(newComida);
         ComidaResponse comidaResponse = ComidaResponse.fromEntity(nuevaComida);
         return ResponseEntity.status(201).body(new ApiResponse<>(201, "Comida creada con éxito", comidaResponse));
@@ -59,13 +71,29 @@ public class ComidaService {
 
     public ResponseEntity<ApiResponse<ComidaResponse>> updateComida(Long id, ComidaDto comidaDto) {
         Comida existingComida = comidaRepository.findById(id).orElse(null);
+        var categoriaIds = comidaDto.getCategoriaIds();
         if (existingComida == null) {
             return ResponseEntity.status(404).body(new ApiResponse<>(404, "Comida no encontrada", null));
         }
+
+        var findCategorias = categoriaRepository.findByIdIn(categoriaIds);
+
+        if (findCategorias.isEmpty() || findCategorias.size() != categoriaIds.size()) {
+            return ResponseEntity.status(400).body(new ApiResponse<>(400, "Algunas categorías no existen", null));
+        }
+
+        var findRecurso = recursoRepository.findById(comidaDto.getRecursoId()).orElse(null);
+
+        if (findRecurso == null) {
+            return ResponseEntity.status(400).body(new ApiResponse<>(400, "Recurso no encontrado", null));
+        }
+
         existingComida.setNombre(comidaDto.getNombre());
         existingComida.setDescripcion(comidaDto.getDescripcion());
         existingComida.setPrecio(comidaDto.getPrecio());
         existingComida.setDisponible(comidaDto.getDisponible());
+        existingComida.setCategorias(findCategorias);
+        existingComida.setRecurso(findRecurso);
         Comida updatedComida = comidaRepository.save(existingComida);
         ComidaResponse comidaResponse = ComidaResponse.fromEntity(updatedComida);
         return ResponseEntity.ok(new ApiResponse<>(200, "Comida actualizada con éxito", comidaResponse));

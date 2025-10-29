@@ -27,7 +27,8 @@ public record ComidaRecord(
                 comidaRecord.getCantidadPedidos(),
                 comidaRecord.getVentasTotales(),
                 comida.getCategorias(),
-                comida.getPedidoComidas());
+                comida.getPedidoComidas(),
+                comida.getRecurso());
     }
 
     public static List<Comida> toResponse(List<ComidaRecord> comidaRecords) {

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.restaurante.restaurante.categoria.response.CategoriaRaw;
 import com.restaurante.restaurante.comida.entity.Comida;
+import com.restaurante.restaurante.recursos.response.RecursoRaw;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class ComidaResponse {
     private Long cantidadPedidos;
     private Long ventasTotales;
     private List<CategoriaRaw> categorias;
+    private RecursoRaw recurso;
 
     public static List<ComidaResponse> toResponse(List<Comida> comidas) {
         return comidas.stream().map(comida -> new ComidaResponse(
@@ -32,7 +34,8 @@ public class ComidaResponse {
                 comida.getDisponible(),
                 comida.getCantidadPedidos(),
                 comida.getVentasTotales(),
-                CategoriaRaw.toListResponse(comida.getCategorias())))
+                CategoriaRaw.toListResponse(comida.getCategorias()),
+                RecursoRaw.fromEntity(comida.getRecurso())))
                 .collect(Collectors.toList());
     }
 
@@ -45,6 +48,7 @@ public class ComidaResponse {
                 comida.getDisponible(),
                 comida.getCantidadPedidos(),
                 comida.getVentasTotales(),
-                CategoriaRaw.toListResponse(comida.getCategorias()));
+                CategoriaRaw.toListResponse(comida.getCategorias()),
+                RecursoRaw.fromEntity(comida.getRecurso()));
     }
 }

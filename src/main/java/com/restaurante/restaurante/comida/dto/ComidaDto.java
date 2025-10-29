@@ -33,6 +33,10 @@ public class ComidaDto {
     @Size(min = 1, message = "Debe haber al menos una categoría")
     private Set<@Min(value = 0, message = "El ID de categoría debe ser mayor o igual a 1") Long> categoriaIds;
 
+    @NotNull(message = "El recurso es obligatorio")
+    @Min(value = 0, message = "El ID de recurso debe ser mayor o igual a 1")
+    private Long recursoId;
+
     public Comida toEntity() {
         Comida comida = new Comida();
         comida.setNombre(this.nombre);

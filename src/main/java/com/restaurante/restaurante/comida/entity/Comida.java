@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.restaurante.restaurante.categoria.entity.Categoria;
 import com.restaurante.restaurante.pedido.entity.PedidoComida;
+import com.restaurante.restaurante.recursos.entity.Recurso;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -14,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -51,5 +53,9 @@ public class Comida {
 
     @OneToMany(mappedBy = "comida")
     List<PedidoComida> pedidoComidas;
+
+    @ManyToOne()
+    @JoinColumn(name = "recurso_id")
+    private Recurso recurso;
 
 }
