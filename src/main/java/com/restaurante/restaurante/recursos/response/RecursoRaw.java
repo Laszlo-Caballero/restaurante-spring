@@ -22,7 +22,7 @@ public class RecursoRaw {
                 recurso.getNombre());
     }
 
-    public List<RecursoRaw> toResponse(List<Recurso> recursos) {
+    public static List<RecursoRaw> toResponse(List<Recurso> recursos) {
         return recursos.stream()
                 .map(RecursoRaw::fromEntity)
                 .toList();

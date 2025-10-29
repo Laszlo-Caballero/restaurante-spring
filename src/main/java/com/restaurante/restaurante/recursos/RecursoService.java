@@ -1,6 +1,7 @@
 package com.restaurante.restaurante.recursos;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,14 @@ public class RecursoService {
         var newFileResponse = RecursoRaw.fromEntity(newFile);
 
         return ResponseEntity.ok(new ApiResponse<>(200, "Archivo guardado exitosamente", newFileResponse));
+    }
+
+    public ResponseEntity<ApiResponse<List<RecursoRaw>>> obtenerTodosLosRecursos() {
+        List<Recurso> recursos = recursoRepository.findAll();
+
+        List<RecursoRaw> recursoRaws = RecursoRaw.toResponse(recursos);
+
+        return ResponseEntity.ok(new ApiResponse<>(200, "Recursos obtenidos exitosamente", recursoRaws));
     }
 
 }
