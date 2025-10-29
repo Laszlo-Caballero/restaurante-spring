@@ -19,13 +19,13 @@ services:
   app_restaurante:
     build: .
     container_name: restaurante_app
-    restart: always
     depends_on:
       - db_restaurante
     environment:
       DB_HOST: jdbc:postgresql://db_restaurante:5432/restaurante
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     ports:
       - "8080:8080"
     networks:

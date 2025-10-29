@@ -40,7 +40,7 @@ public class WebSecurityConfig {
         http.csrf(t -> t.disable())
                 .authorizeHttpRequests(
                         auth -> {
-                            auth.requestMatchers("api/v1/auth/**", "/images/**").permitAll();
+                            auth.requestMatchers("api/v1/auth/login", "/images/**").permitAll();
                             for (RouteConfig r : ConfigRoutes.adminRoutes) {
                                 r.getMethods().forEach(m -> auth.requestMatchers(m, r.getPath())
                                         .hasAuthority(RoleEnum.ADMIN.name()));
