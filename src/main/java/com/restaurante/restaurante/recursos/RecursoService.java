@@ -1,6 +1,7 @@
 package com.restaurante.restaurante.recursos;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,7 +42,7 @@ public class RecursoService {
         }
 
         var newFile = Recurso.builder()
-                .nombre(fileName)
+                .nombre(fileName).fechaCreacion(LocalDateTime.now())
                 .build();
 
         recursoRepository.save(newFile);

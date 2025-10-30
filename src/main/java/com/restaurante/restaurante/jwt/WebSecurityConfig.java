@@ -38,6 +38,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(t -> t.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
                         auth -> {
                             auth.requestMatchers("api/v1/auth/login", "/images/**").permitAll();

@@ -1,6 +1,5 @@
 package com.restaurante.restaurante.recursos.response;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.restaurante.restaurante.recursos.entity.Recurso;
@@ -16,13 +15,13 @@ public class RecursoRaw {
 
     private Long recursoId;
     private String nombre;
-    private LocalDateTime fechaCreacion;
+    private String fechaCreacion;
 
     public static RecursoRaw fromEntity(Recurso recurso) {
         return new RecursoRaw(
                 recurso.getRecursoId(),
                 recurso.getNombre(),
-                recurso.getFechaCreacion());
+                recurso.getFechaCreacion().toString());
     }
 
     public static List<RecursoRaw> toResponse(List<Recurso> recursos) {
