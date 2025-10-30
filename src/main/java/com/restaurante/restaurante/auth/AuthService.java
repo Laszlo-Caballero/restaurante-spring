@@ -42,7 +42,7 @@ public class AuthService {
 
             if (!user.getEstado()) {
                 return ResponseEntity.status(403)
-                        .body(new ApiResponse<>(403, "User account is inactive", null));
+                        .body(new ApiResponse<>(403, "La cuenta está inactiva", null));
             }
 
             Map<String, Object> claims = new HashMap<>();
@@ -56,7 +56,7 @@ public class AuthService {
             return ResponseEntity.ok(new ApiResponse<>(200, "Login successful", loginResponse));
         } catch (Exception e) {
             return ResponseEntity.status(401)
-                    .body(new ApiResponse<>(401, "Invalid username or password", null));
+                    .body(new ApiResponse<>(401, "Usuario o contraseña inválidos", null));
         }
     }
 

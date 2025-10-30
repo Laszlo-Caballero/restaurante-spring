@@ -10,12 +10,16 @@ import com.restaurante.restaurante.categoria.dto.CategoriaDto;
 import com.restaurante.restaurante.categoria.entity.Categoria;
 import com.restaurante.restaurante.categoria.response.CategoriaResponse;
 import com.restaurante.restaurante.categoria.respository.CategoriaRepository;
+import com.restaurante.restaurante.recursos.repository.RecursoRepository;
 import com.restaurante.restaurante.utils.ApiResponse;
 
 @Service
 public class CategoriaService {
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private RecursoRepository recursoRepository;
 
     public ResponseEntity<ApiResponse<List<CategoriaResponse>>> getAllCategorias() {
         List<Categoria> categorias = categoriaRepository.findAll();
@@ -37,6 +41,15 @@ public class CategoriaService {
 
     public ResponseEntity<ApiResponse<CategoriaResponse>> createCategoria(CategoriaDto categoria) {
         Categoria newCategoria = categoria.toEntity();
+
+        var recurso = recursoRepository.findById(categoria.getRecursoId()).orElse(null);
+
+        if (recurso == null) {
+            ApiResponse<CategoriaResponse> response = new ApiResponse<>(404, "Recurso not found", null);
+            return ResponseEntity.status(404).body(response);
+        }
+
+        newCategoria.setRecurso(recurso);
         categoriaRepository.save(newCategoria);
         ApiResponse<CategoriaResponse> response = new ApiResponse<>(201, "Categoria created successfully",
                 CategoriaResponse.fromEntity(newCategoria));

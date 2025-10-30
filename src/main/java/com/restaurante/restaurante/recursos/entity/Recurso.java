@@ -3,6 +3,7 @@ package com.restaurante.restaurante.recursos.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.restaurante.restaurante.categoria.entity.Categoria;
 import com.restaurante.restaurante.comida.entity.Comida;
 
 import jakarta.persistence.Column;
@@ -36,4 +37,7 @@ public class Recurso {
 
     @OneToMany(mappedBy = "recurso")
     private List<Comida> comidas;
+
+    @OneToMany(mappedBy = "recurso")
+    private List<Categoria> categorias;
 }
