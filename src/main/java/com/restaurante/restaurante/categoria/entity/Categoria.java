@@ -26,6 +26,8 @@ public class Categoria {
 
     private String nombre;
 
+    private String descripcion;
+
     @ManyToMany(mappedBy = "categorias", cascade = CascadeType.ALL)
     private List<Comida> comidas;
 

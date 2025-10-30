@@ -16,6 +16,9 @@ public class CategoriaDto {
     @NotBlank(message = "El nombre de la categoría no puede estar vacío")
     private String nombre;
 
+    @NotBlank(message = "El nombre de la categoría no puede estar vacío")
+    private String descripcion;
+
     @Min(value = 1, message = "El ID del recurso debe ser un número positivo")
     @NotNull(message = "El ID del recurso no puede ser nulo")
     private Long recursoId;
@@ -23,6 +26,7 @@ public class CategoriaDto {
     public Categoria toEntity() {
         Categoria categoria = new Categoria();
         categoria.setNombre(this.nombre);
+        categoria.setDescripcion(this.descripcion);
         categoria.setComidas(List.of());
         return categoria;
     }

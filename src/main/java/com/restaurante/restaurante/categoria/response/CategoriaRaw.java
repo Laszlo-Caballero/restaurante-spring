@@ -14,14 +14,15 @@ import lombok.NoArgsConstructor;
 public class CategoriaRaw {
     private Long id;
     private String nombre;
+    private String descripcion;
 
     public static List<CategoriaRaw> toListResponse(List<Categoria> categorias) {
         return categorias.stream()
-                .map(cat -> new CategoriaRaw(cat.getId(), cat.getNombre()))
+                .map(cat -> new CategoriaRaw(cat.getId(), cat.getNombre(), cat.getDescripcion()))
                 .toList();
     }
 
     public static CategoriaRaw fromEntity(Categoria categoria) {
-        return new CategoriaRaw(categoria.getId(), categoria.getNombre());
+        return new CategoriaRaw(categoria.getId(), categoria.getNombre(), categoria.getDescripcion());
     }
 }

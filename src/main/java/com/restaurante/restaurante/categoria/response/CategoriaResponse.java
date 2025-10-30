@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class CategoriaResponse {
     private Long id;
     private String nombre;
+    private String descripcion;
     private List<ComidaRaw> comidas;
     private RecursoRaw recurso;
     private Integer totalComidas;
@@ -30,6 +31,7 @@ public class CategoriaResponse {
         return new CategoriaResponse(
                 categoria.getId(),
                 categoria.getNombre(),
+                categoria.getDescripcion(),
                 ComidaRaw.toResponse(categoria.getComidas()),
                 RecursoRaw.fromEntity(categoria.getRecurso()),
                 categoria.getComidas().size());
