@@ -40,6 +40,11 @@ public class AuthService {
 
             var user = usuarioRepository.findByUsername(login.getUsername()).orElseThrow();
 
+            if (!user.getEstado()) {
+                return ResponseEntity.status(403)
+                        .body(new ApiResponse<>(403, "User account is inactive", null));
+            }
+
             Map<String, Object> claims = new HashMap<>();
             claims.put("username", user.getUsername());
             claims.put("userId", user.getUsuarioId());

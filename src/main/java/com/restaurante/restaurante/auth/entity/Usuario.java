@@ -41,6 +41,9 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
 
+    @Column(columnDefinition = "boolean default true")
+    private Boolean estado;
+
     @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     private List<PedidoComida> pedidos;
 

@@ -1,9 +1,11 @@
 package com.restaurante.restaurante.recursos.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.restaurante.restaurante.comida.entity.Comida;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +30,9 @@ public class Recurso {
     private Long recursoId;
 
     private String nombre;
+
+    @Column(columnDefinition = "timestamp default current_timestamp")
+    private LocalDateTime fechaCreacion;
 
     @OneToMany(mappedBy = "recurso")
     private List<Comida> comidas;
