@@ -18,17 +18,16 @@ public record ComidaRecord(
 
         Comida comida = comidaRecord.getComida();
 
-        return new Comida(
-                comida.getComidaId(),
-                comida.getNombre(),
-                comida.getDescripcion(),
-                comida.getPrecio(),
-                comida.getDisponible(),
-                comidaRecord.getCantidadPedidos(),
-                comidaRecord.getVentasTotales(),
-                comida.getCategorias(),
-                comida.getPedidoComidas(),
-                comida.getRecurso());
+        return Comida.builder()
+                .comidaId(comida.getComidaId())
+                .nombre(comida.getNombre())
+                .slug(comida.getSlug())
+                .descripcion(comida.getDescripcion())
+                .precio(comida.getPrecio())
+                .disponible(comida.getDisponible())
+                .categorias(comida.getCategorias())
+                .pedidoComidas(comida.getPedidoComidas())
+                .build();
     }
 
     public static List<Comida> toResponse(List<ComidaRecord> comidaRecords) {

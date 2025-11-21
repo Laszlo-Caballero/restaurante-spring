@@ -20,6 +20,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -28,12 +29,15 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Comida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long comidaId;
 
     private String nombre;
+
+    private String slug;
 
     private String descripcion;
 

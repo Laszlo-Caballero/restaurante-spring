@@ -23,6 +23,9 @@ public class ComidaDto {
     @DecimalMin(value = "1.0", message = "El precio debe ser mayor o igual a 1.0")
     private Double precio;
 
+    @NotBlank(message = "El slug no puede estar vacío")
+    private String slug;
+
     @NotBlank(message = "La descripción no puede estar vacía")
     private String descripcion;
 
@@ -38,11 +41,13 @@ public class ComidaDto {
     private Long recursoId;
 
     public Comida toEntity() {
-        Comida comida = new Comida();
-        comida.setNombre(this.nombre);
-        comida.setPrecio(this.precio);
-        comida.setDescripcion(this.descripcion);
-        comida.setDisponible(this.disponible);
+        Comida comida = Comida.builder()
+                .nombre(this.nombre)
+                .slug(this.slug)
+                .descripcion(this.descripcion)
+                .precio(this.precio)
+                .disponible(this.disponible)
+                .build();
         return comida;
     }
 }
