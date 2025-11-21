@@ -8,12 +8,14 @@ import com.restaurante.restaurante.comida.entity.Comida;
 import com.restaurante.restaurante.recursos.response.RecursoRaw;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class ComidaResponse {
     private Long comidaId;
     private String nombre;
@@ -26,29 +28,31 @@ public class ComidaResponse {
     private RecursoRaw recurso;
 
     public static List<ComidaResponse> toResponse(List<Comida> comidas) {
-        return comidas.stream().map(comida -> new ComidaResponse(
-                comida.getComidaId(),
-                comida.getNombre(),
-                comida.getDescripcion(),
-                comida.getPrecio(),
-                comida.getDisponible(),
-                comida.getCantidadPedidos(),
-                comida.getVentasTotales(),
-                CategoriaRaw.toListResponse(comida.getCategorias()),
-                RecursoRaw.fromEntity(comida.getRecurso())))
+        return comidas.stream().map(comida -> fromEntity(comida))
                 .collect(Collectors.toList());
     }
 
     public static ComidaResponse fromEntity(Comida comida) {
-        return new ComidaResponse(
-                comida.getComidaId(),
-                comida.getNombre(),
-                comida.getDescripcion(),
-                comida.getPrecio(),
-                comida.getDisponible(),
-                comida.getCantidadPedidos(),
-                comida.getVentasTotales(),
-                CategoriaRaw.toListResponse(comida.getCategorias()),
-                RecursoRaw.fromEntity(comida.getRecurso()));
+
+        var cantidadPedidos = comida.getPedidoComidas() != null
+                ? comida.getPedidoComidas().stream().count()
+                : 0L;
+        var ventasTotales = comida.getPedidoComidas() != null
+                ? comida.getPedidoComidas().stream()
+                        .mapToLong(pc -> pc.getCantidad())
+                        .sum()
+                : 0L;
+
+        return ComidaResponse.builder()
+                .comidaId(comida.getComidaId())
+                .nombre(comida.getNombre())
+                .descripcion(comida.getDescripcion())
+                .precio(comida.getPrecio())
+                .disponible(comida.getDisponible())
+                .cantidadPedidos(cantidadPedidos)
+                .ventasTotales(ventasTotales)
+                .categorias(CategoriaRaw.toListResponse(comida.getCategorias()))
+                .recurso(RecursoRaw.fromEntity(comida.getRecurso()))
+                .build();
     }
 }
