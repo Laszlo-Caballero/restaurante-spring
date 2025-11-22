@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 public class ComidaResponse {
     private Long comidaId;
     private String nombre;
+    private String slug;
     private String descripcion;
     private Double precio;
     private Boolean disponible;
@@ -49,6 +50,7 @@ public class ComidaResponse {
                 .descripcion(comida.getDescripcion())
                 .precio(comida.getPrecio())
                 .disponible(comida.getDisponible())
+                .slug(comida.getSlug())
                 .cantidadPedidos(cantidadPedidos)
                 .ventasTotales(ventasTotales)
                 .categorias(CategoriaRaw.toListResponse(comida.getCategorias()))
