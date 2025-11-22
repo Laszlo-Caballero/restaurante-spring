@@ -51,6 +51,9 @@ public class Comida {
     @Transient
     private Long ventasTotales;
 
+    @Transient
+    private Double gananciaTotal;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "comida_categoria", joinColumns = @JoinColumn(name = "comida_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
     List<Categoria> categorias;

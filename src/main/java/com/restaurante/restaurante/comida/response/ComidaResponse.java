@@ -25,6 +25,7 @@ public class ComidaResponse {
     private Boolean disponible;
     private Long cantidadPedidos;
     private Long ventasTotales;
+    private Double gananciaTotal;
     private List<CategoriaRaw> categorias;
     private RecursoRaw recurso;
 
@@ -43,6 +44,11 @@ public class ComidaResponse {
                         .mapToLong(pc -> pc.getCantidad())
                         .sum()
                 : 0L;
+        var gannaciaTotal = comida.getPedidoComidas() != null
+                ? comida.getPedidoComidas().stream()
+                        .mapToDouble(pc -> pc.getCantidad() * comida.getPrecio())
+                        .sum()
+                : 0.0;
 
         return ComidaResponse.builder()
                 .comidaId(comida.getComidaId())
@@ -53,6 +59,7 @@ public class ComidaResponse {
                 .slug(comida.getSlug())
                 .cantidadPedidos(cantidadPedidos)
                 .ventasTotales(ventasTotales)
+                .gananciaTotal(gannaciaTotal)
                 .categorias(CategoriaRaw.toListResponse(comida.getCategorias()))
                 .recurso(RecursoRaw.fromEntity(comida.getRecurso()))
                 .build();
