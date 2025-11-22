@@ -5,12 +5,14 @@ import com.restaurante.restaurante.auth.enums.RoleEnum;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class UsuarioDto {
     @NotNull(message = "El ID del usuario no puede ser nulo en la actualización")
     private String nombre;
@@ -28,6 +30,7 @@ public class UsuarioDto {
         Usuario usuario = new Usuario();
         usuario.setNombre(this.nombre);
         usuario.setUsername(this.username);
+        usuario.setEstado(true);
         usuario.setRole(this.role);
         return usuario;
     }

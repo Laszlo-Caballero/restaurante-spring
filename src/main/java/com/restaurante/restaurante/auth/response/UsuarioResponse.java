@@ -7,26 +7,31 @@ import com.restaurante.restaurante.auth.enums.RoleEnum;
 import com.restaurante.restaurante.pedido.response.PedidoComidaRaw;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class UsuarioResponse {
     private Long usuarioId;
     private String nombre;
     private String username;
+    private Boolean estado;
     private RoleEnum role;
     public List<PedidoComidaRaw> pedidos;
 
     public static UsuarioResponse fromEntity(Usuario usuario) {
-        var usuarioResponse = new UsuarioResponse(
-                usuario.getUsuarioId(),
-                usuario.getNombre(),
-                usuario.getUsername(),
-                usuario.getRole(),
-                PedidoComidaRaw.toResponse(usuario.getPedidos()));
+        var usuarioResponse = UsuarioResponse.builder()
+                .usuarioId(usuario.getUsuarioId())
+                .nombre(usuario.getNombre())
+                .username(usuario.getUsername())
+                .estado(usuario.getEstado())
+                .role(usuario.getRole())
+                .pedidos(PedidoComidaRaw.toResponse(usuario.getPedidos()))
+                .build();
         return usuarioResponse;
     }
 
