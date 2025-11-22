@@ -7,6 +7,7 @@ import com.restaurante.restaurante.pedido.entity.PedidoComida;
 import com.restaurante.restaurante.recursos.entity.Recurso;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -39,6 +40,7 @@ public class Comida {
 
     private String slug;
 
+    @Column(columnDefinition = "TEXT")
     private String descripcion;
 
     private Double precio;

@@ -6,6 +6,7 @@ import com.restaurante.restaurante.comida.entity.Comida;
 import com.restaurante.restaurante.recursos.entity.Recurso;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Categoria {
 
     private String nombre;
 
+    @Column(columnDefinition = "TEXT")
     private String descripcion;
 
     @ManyToMany(mappedBy = "categorias", cascade = CascadeType.ALL)
