@@ -1,5 +1,6 @@
 package com.restaurante.restaurante.auth.entity;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
@@ -43,6 +44,9 @@ public class Usuario implements UserDetails {
 
     @Column(columnDefinition = "boolean default true")
     private Boolean estado;
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp lastLogin;
 
     @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     private List<PedidoComida> pedidos;

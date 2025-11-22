@@ -1,5 +1,6 @@
 package com.restaurante.restaurante.auth.response;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.restaurante.restaurante.auth.entity.Usuario;
@@ -21,6 +22,7 @@ public class UsuarioResponse {
     private String username;
     private Boolean estado;
     private RoleEnum role;
+    private Timestamp lastLogin;
     public List<PedidoComidaRaw> pedidos;
 
     public static UsuarioResponse fromEntity(Usuario usuario) {
@@ -29,6 +31,7 @@ public class UsuarioResponse {
                 .nombre(usuario.getNombre())
                 .username(usuario.getUsername())
                 .estado(usuario.getEstado())
+                .lastLogin(usuario.getLastLogin())
                 .role(usuario.getRole())
                 .pedidos(PedidoComidaRaw.toResponse(usuario.getPedidos()))
                 .build();

@@ -3,6 +3,7 @@ package com.restaurante.restaurante.usuarios;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +32,9 @@ public class UsuarioService {
     }
 
     public ResponseEntity<ApiResponse<List<UsuarioResponse>>> listarUsuarios() {
-        List<Usuario> usuarios = usuarioRepository.findAll();
+        Sort sortById = Sort.by("usuarioId").ascending();
+
+        List<Usuario> usuarios = usuarioRepository.findAll(sortById);
         List<UsuarioResponse> usuarioResponses = UsuarioResponse.toResponses(usuarios);
         return ResponseEntity.ok(new ApiResponse<>(200, "Lista de usuarios obtenida con éxito", usuarioResponses));
     }

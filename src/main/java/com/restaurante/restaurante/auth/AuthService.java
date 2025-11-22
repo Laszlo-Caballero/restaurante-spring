@@ -1,5 +1,6 @@
 package com.restaurante.restaurante.auth;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +51,10 @@ public class AuthService {
             claims.put("userId", user.getUsuarioId());
 
             String token = jwtService.generateToken(claims, user);
+
+            user.setLastLogin(new Timestamp(System.currentTimeMillis()));
+
+            usuarioRepository.save(user);
 
             LoginResponse loginResponse = new LoginResponse(user, token);
 
