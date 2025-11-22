@@ -19,5 +19,9 @@ public class ConfigRoutes {
                                         .path("api/v1/mesas/**").build(),
                         RouteConfig.builder().methods(List.of(HttpMethod.GET)).path("api/v1/usuarios").build(),
                         RouteConfig.builder().methods(List.of(HttpMethod.POST))
-                                        .path("api/v1/auth/register").build());
+                                        .path("api/v1/auth/register").build(),
+                        RouteConfig.builder().methods(List.of(HttpMethod.DELETE))
+                                        .path("api/v1/usuarios/{id}").build()
+
+        );
 }

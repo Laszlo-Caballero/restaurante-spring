@@ -38,4 +38,15 @@ public class UsuarioService {
         List<UsuarioResponse> usuarioResponses = UsuarioResponse.toResponses(usuarios);
         return ResponseEntity.ok(new ApiResponse<>(200, "Lista de usuarios obtenida con éxito", usuarioResponses));
     }
+
+    public ResponseEntity<?> eliminarUsuario(Long id) {
+        var findUser = usuarioRepository.findById(id).orElse(null);
+        if (findUser == null) {
+            return ResponseEntity.status(404).body(new ApiResponse<>(404, "Usuario no encontrado", null));
+        }
+
+        findUser.setEstado(false);
+        usuarioRepository.save(findUser);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Usuario eliminado (estado inactivo) con éxito", null));
+    }
 }
