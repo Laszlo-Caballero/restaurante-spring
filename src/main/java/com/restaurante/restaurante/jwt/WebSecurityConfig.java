@@ -41,13 +41,14 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
                         auth -> {
-                            auth.requestMatchers("api/v1/auth/login", "/images/**").permitAll();
+                            auth.requestMatchers("api/v1/auth/login", "/images/**", "/ws/**").permitAll();
                             for (RouteConfig r : ConfigRoutes.adminRoutes) {
                                 r.getMethods().forEach(m -> auth.requestMatchers(m, r.getPath())
                                         .hasAuthority(RoleEnum.ADMIN.name()));
                             }
                             auth.anyRequest().authenticated();
                         })
+                .headers(h -> h.frameOptions(f -> f.disable()))
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -60,9 +61,10 @@ public class WebSecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
