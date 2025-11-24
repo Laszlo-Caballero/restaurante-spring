@@ -1,11 +1,14 @@
 package com.restaurante.restaurante.ordenes;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import com.restaurante.restaurante.pedido.response.PedidoResponse;
+import com.restaurante.restaurante.ordenes.dto.OrderDto;
 
 @Controller
 public class OrdenesController {
@@ -15,13 +18,13 @@ public class OrdenesController {
 
     @MessageMapping("/ordenes")
     @SendTo("/topic/ordenes")
-    public PedidoResponse recibirOrden(PedidoResponse orden) {
+    public List<OrderDto> recibirOrden(@Payload OrderDto orden) {
         return ordenesService.agregarOrden(orden);
     }
 
     @MessageMapping("/todas-las-ordenes")
     @SendTo("/topic/todas-las-ordenes")
-    public java.util.List<PedidoResponse> obtenerTodasLasOrdenes() {
+    public List<OrderDto> obtenerTodasLasOrdenes() {
         return ordenesService.obtenerTodasLasOrdenes();
     }
 }
