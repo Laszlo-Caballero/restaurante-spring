@@ -3,6 +3,7 @@ package com.restaurante.restaurante.ordenes.dto;
 import java.util.List;
 
 import com.restaurante.restaurante.mesas.response.MesaRaw;
+import com.restaurante.restaurante.ordenes.enums.EstadoOrden;
 
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +17,6 @@ public class OrderDto {
     private MesaRaw mesa;
 
     private List<ComidaOrden> comidas;
+
+    private final EstadoOrden estado = EstadoOrden.EN_ESPERA;
 }
