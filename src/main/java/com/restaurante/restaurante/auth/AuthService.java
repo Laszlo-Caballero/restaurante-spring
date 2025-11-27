@@ -14,12 +14,17 @@ import org.springframework.stereotype.Service;
 import com.restaurante.restaurante.auth.dto.LoginDto;
 import com.restaurante.restaurante.auth.dto.UsuarioDto;
 import com.restaurante.restaurante.auth.entity.Usuario;
+import com.restaurante.restaurante.auth.enums.RoleEnum;
 import com.restaurante.restaurante.auth.repository.UsuarioRepository;
 import com.restaurante.restaurante.auth.response.LoginResponse;
 import com.restaurante.restaurante.jwt.JwtService;
 import com.restaurante.restaurante.utils.ApiResponse;
 
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class AuthService {
 
     @Autowired
@@ -33,6 +38,21 @@ public class AuthService {
 
     @Autowired
     private JwtService jwtService;
+
+    @PostConstruct
+    private void initAdminUser() {
+        if (usuarioRepository.count() == 0) {
+            Usuario admin = new Usuario();
+            admin.setUsername("admin");
+            admin.setPassword(passwordEncoder.encode("admin"));
+            admin.setNombre("Administrador");
+            admin.setEstado(true);
+            admin.setRole(RoleEnum.ADMIN);
+            usuarioRepository.save(admin);
+            log.info("Admin user created with username 'admin' and password 'admin'");
+        }
+        log.info("Admin user already exists");
+    }
 
     public ResponseEntity<ApiResponse<LoginResponse>> login(LoginDto login) {
         try {
