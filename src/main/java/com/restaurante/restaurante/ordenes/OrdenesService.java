@@ -55,6 +55,17 @@ public class OrdenesService {
 
     public List<OrderDto> obtenerTodasLasOrdenes() {
         log.info("Obteniendo todas las ordenes: {}", ordenesCache.size());
+
+        var mesas = mesaRepository.findByDisponibleTrue();
+        mesas.forEach(m -> {
+            ordenesCache.clear();
+            var order = OrderDto.builder()
+                    .mesa(MesaRaw.fromEntity(m))
+                    .comidas(new ArrayList<>())
+                    .build();
+            ordenesCache.add(order);
+        });
+
         return ordenesCache;
     }
 }

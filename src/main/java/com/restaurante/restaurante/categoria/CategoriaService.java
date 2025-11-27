@@ -63,6 +63,17 @@ public class CategoriaService {
             return ResponseEntity.status(404).body(response);
         }
         existingCategoria.setNombre(categoriaDto.getNombre());
+        existingCategoria.setDescripcion(categoriaDto.getDescripcion());
+
+        var recurso = recursoRepository.findById(categoriaDto.getRecursoId()).orElse(null);
+
+        if (recurso == null) {
+            ApiResponse<CategoriaResponse> response = new ApiResponse<>(404, "Recurso not found", null);
+            return ResponseEntity.status(404).body(response);
+        }
+
+        existingCategoria.setRecurso(recurso);
+
         categoriaRepository.save(existingCategoria);
         ApiResponse<CategoriaResponse> response = new ApiResponse<>(200, "Categoria updated successfully",
                 CategoriaResponse.fromEntity(existingCategoria));
@@ -75,7 +86,8 @@ public class CategoriaService {
             ApiResponse<Void> response = new ApiResponse<>(404, "Categoria not found", null);
             return ResponseEntity.status(404).body(response);
         }
-        categoriaRepository.deleteById(id);
+        existingCategoria.setEstado(false);
+        categoriaRepository.save(existingCategoria);
         ApiResponse<Void> response = new ApiResponse<>(200, "Categoria deleted successfully", null);
         return ResponseEntity.ok(response);
     }

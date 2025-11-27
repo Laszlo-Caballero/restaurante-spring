@@ -30,6 +30,9 @@ public class Categoria {
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean estado;
+
     @ManyToMany(mappedBy = "categorias", cascade = CascadeType.ALL)
     private List<Comida> comidas;
 
