@@ -5,6 +5,8 @@ import com.restaurante.restaurante.comida.entity.Comida;
 import com.restaurante.restaurante.pedido.enums.EstadoPedido;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,5 +41,6 @@ public class PedidoComida {
 
     private Integer cantidad;
 
+    @Enumerated(EnumType.STRING)
     private EstadoPedido estado;
 }

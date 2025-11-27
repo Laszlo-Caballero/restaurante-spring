@@ -148,49 +148,56 @@ public class PedidoService {
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<ApiResponse<PedidoRaw>> completarPedido(Long id, CompletarPedidoDto completarPedidoDto) {
+    public ResponseEntity<ApiResponse<PedidoResponse>> completarPedido(Long id, CompletarPedidoDto completarPedidoDto) {
         var pedido = pedidoRepository.findById(id).orElse(null);
         if (pedido == null) {
-            ApiResponse<PedidoRaw> response = new ApiResponse<>(404, "Pedido no encontrado", null);
+            ApiResponse<PedidoResponse> response = new ApiResponse<>(404, "Pedido no encontrado", null);
             return ResponseEntity.status(404).body(response);
         }
+
+        pedido.getPedidoComidas().forEach(pc -> {
+            pc.setEstado(EstadoPedido.COMPLETADO);
+            pedidoComidaRepository.save(pc);
+        });
 
         pedido.setEstado(PedidoEnum.PAGADO);
         pedido.setMetodoPago(completarPedidoDto.getMetodoPago());
 
         pedidoRepository.save(pedido);
 
-        ApiResponse<PedidoRaw> response = new ApiResponse<>(200, "Pedido completado", PedidoRaw.fromEntity(pedido));
+        ApiResponse<PedidoResponse> response = new ApiResponse<>(200, "Pedido completado",
+                PedidoResponse.fromEntity(pedido));
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<ApiResponse<PedidoRaw>> actualizarEstadoPedidoComida(Long pedidoComidaId,
+    public ResponseEntity<ApiResponse<PedidoResponse>> actualizarEstadoPedidoComida(Long pedidoComidaId,
             EstadoPedido nuevoEstado) {
         var pedidoComida = pedidoComidaRepository.findById(pedidoComidaId).orElse(null);
         if (pedidoComida == null) {
-            ApiResponse<PedidoRaw> response = new ApiResponse<>(404, "Item de pedido no encontrado", null);
+            ApiResponse<PedidoResponse> response = new ApiResponse<>(404, "Item de pedido no encontrado", null);
             return ResponseEntity.status(404).body(response);
         }
 
         pedidoComida.setEstado(nuevoEstado);
         pedidoComidaRepository.save(pedidoComida);
 
-        ApiResponse<PedidoRaw> response = new ApiResponse<>(200, "Estado del item de pedido actualizado",
-                PedidoRaw.fromEntity(pedidoComida.getPedido()));
+        ApiResponse<PedidoResponse> response = new ApiResponse<>(200, "Estado del item de pedido actualizado",
+                PedidoResponse.fromEntity(pedidoComida.getPedido()));
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<ApiResponse<PedidoRaw>> cancelarPedido(Long id) {
+    public ResponseEntity<ApiResponse<PedidoResponse>> cancelarPedido(Long id) {
         var pedido = pedidoRepository.findById(id).orElse(null);
         if (pedido == null) {
-            ApiResponse<PedidoRaw> response = new ApiResponse<>(404, "Pedido no encontrado", null);
+            ApiResponse<PedidoResponse> response = new ApiResponse<>(404, "Pedido no encontrado", null);
             return ResponseEntity.status(404).body(response);
         }
 
         pedido.setEstado(PedidoEnum.CANCELADO);
         pedidoRepository.save(pedido);
 
-        ApiResponse<PedidoRaw> response = new ApiResponse<>(200, "Pedido cancelado", PedidoRaw.fromEntity(pedido));
+        ApiResponse<PedidoResponse> response = new ApiResponse<>(200, "Pedido cancelado",
+                PedidoResponse.fromEntity(pedido));
         return ResponseEntity.ok(response);
     }
 

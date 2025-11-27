@@ -27,6 +27,7 @@ public class CategoriaDto {
         Categoria categoria = new Categoria();
         categoria.setNombre(this.nombre);
         categoria.setDescripcion(this.descripcion);
+        categoria.setEstado(true);
         categoria.setComidas(List.of());
         return categoria;
     }
