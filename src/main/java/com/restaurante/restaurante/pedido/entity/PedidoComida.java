@@ -2,6 +2,7 @@ package com.restaurante.restaurante.pedido.entity;
 
 import com.restaurante.restaurante.auth.entity.Usuario;
 import com.restaurante.restaurante.comida.entity.Comida;
+import com.restaurante.restaurante.pedido.enums.EstadoPedido;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,4 +38,6 @@ public class PedidoComida {
     private Usuario usuario;
 
     private Integer cantidad;
+
+    private EstadoPedido estado;
 }

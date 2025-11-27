@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.restaurante.restaurante.pedido.dto.AgregarItemDto;
 import com.restaurante.restaurante.pedido.dto.CompletarPedidoDto;
 import com.restaurante.restaurante.pedido.dto.PedidoDto;
+import com.restaurante.restaurante.pedido.enums.EstadoPedido;
 
 import jakarta.validation.Valid;
 
@@ -42,6 +43,12 @@ public class PedidoController {
     public ResponseEntity<?> agregarItemPedido(@PathVariable Long id,
             @Valid @RequestBody AgregarItemDto agregarItemDto) {
         return pedidoService.agregarItem(id, agregarItemDto);
+    }
+
+    @PutMapping("/cambiar-estado/{id}/{nuevoEstado}")
+    public ResponseEntity<?> cambiarEstadoPedidoComida(@PathVariable Long id,
+            @PathVariable EstadoPedido nuevoEstado) {
+        return pedidoService.actualizarEstadoPedidoComida(id, nuevoEstado);
     }
 
     @PutMapping("/completar/{id}")

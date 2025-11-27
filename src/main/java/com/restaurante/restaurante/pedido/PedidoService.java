@@ -17,6 +17,7 @@ import com.restaurante.restaurante.pedido.dto.CompletarPedidoDto;
 import com.restaurante.restaurante.pedido.dto.PedidoDto;
 import com.restaurante.restaurante.pedido.entity.Pedido;
 import com.restaurante.restaurante.pedido.entity.PedidoComida;
+import com.restaurante.restaurante.pedido.enums.EstadoPedido;
 import com.restaurante.restaurante.pedido.enums.PedidoEnum;
 import com.restaurante.restaurante.pedido.repository.PedidoComidaRepository;
 import com.restaurante.restaurante.pedido.repository.PedidoRepository;
@@ -97,6 +98,7 @@ public class PedidoService {
                     pc.setCantidad(cantidad);
                     pc.setPedido(nuevoPedido);
                     pc.setUsuario(usuario);
+                    pc.setEstado(EstadoPedido.PENDIENTE);
                     pedidoComidaRepository.save(pc);
                     return pc;
                 }).toList();
@@ -159,6 +161,22 @@ public class PedidoService {
         pedidoRepository.save(pedido);
 
         ApiResponse<PedidoRaw> response = new ApiResponse<>(200, "Pedido completado", PedidoRaw.fromEntity(pedido));
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<ApiResponse<PedidoRaw>> actualizarEstadoPedidoComida(Long pedidoComidaId,
+            EstadoPedido nuevoEstado) {
+        var pedidoComida = pedidoComidaRepository.findById(pedidoComidaId).orElse(null);
+        if (pedidoComida == null) {
+            ApiResponse<PedidoRaw> response = new ApiResponse<>(404, "Item de pedido no encontrado", null);
+            return ResponseEntity.status(404).body(response);
+        }
+
+        pedidoComida.setEstado(nuevoEstado);
+        pedidoComidaRepository.save(pedidoComida);
+
+        ApiResponse<PedidoRaw> response = new ApiResponse<>(200, "Estado del item de pedido actualizado",
+                PedidoRaw.fromEntity(pedidoComida.getPedido()));
         return ResponseEntity.ok(response);
     }
 
