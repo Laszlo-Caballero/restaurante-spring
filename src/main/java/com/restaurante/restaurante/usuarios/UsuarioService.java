@@ -62,7 +62,8 @@ public class UsuarioService {
             return ResponseEntity.status(404).body(new ApiResponse<>(404, "Usuario no encontrado", null));
         }
 
-        if (usuarioRepository.existsByUsername(usuarioDto.getUsername())) {
+        if (usuarioRepository.existsByUsername(usuarioDto.getUsername())
+                && !findUser.getUsername().equals(usuarioDto.getUsername())) {
             return ResponseEntity.status(400)
                     .body(new ApiResponse<>(400, "El nombre de usuario ya existe", null));
         }
