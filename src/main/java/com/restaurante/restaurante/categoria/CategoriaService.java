@@ -3,6 +3,7 @@ package com.restaurante.restaurante.categoria;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import com.restaurante.restaurante.categoria.dto.CategoriaDto;
 import com.restaurante.restaurante.categoria.entity.Categoria;
 import com.restaurante.restaurante.categoria.response.CategoriaResponse;
 import com.restaurante.restaurante.categoria.respository.CategoriaRepository;
+import com.restaurante.restaurante.categoria.specification.CategoriaSpecification;
 import com.restaurante.restaurante.recursos.repository.RecursoRepository;
 import com.restaurante.restaurante.utils.ApiResponse;
 
@@ -21,8 +23,17 @@ public class CategoriaService {
     @Autowired
     private RecursoRepository recursoRepository;
 
-    public ResponseEntity<ApiResponse<List<CategoriaResponse>>> getAllCategorias() {
-        List<Categoria> categorias = categoriaRepository.findAll();
+    public ResponseEntity<ApiResponse<List<CategoriaResponse>>> getAllCategorias(Boolean estado) {
+
+        List<Categoria> categorias;
+
+        if (estado != null) {
+            Specification<Categoria> spec = CategoriaSpecification.hasEstado(estado);
+            categorias = categoriaRepository.findAll(spec);
+        } else {
+            categorias = categoriaRepository.findAll();
+        }
+
         ApiResponse<List<CategoriaResponse>> response = new ApiResponse<>(200, "Categorias retrieved successfully",
                 CategoriaResponse.toResponse(categorias));
         return ResponseEntity.ok(response);

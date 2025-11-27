@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restaurante.restaurante.categoria.dto.CategoriaDto;
@@ -21,8 +22,8 @@ public class CategoriaController {
     private CategoriaService categoriaService;
 
     @GetMapping
-    public ResponseEntity<?> getAllCategorias() {
-        return categoriaService.getAllCategorias();
+    public ResponseEntity<?> getAllCategorias(@RequestParam(required = false) Boolean estado) {
+        return categoriaService.getAllCategorias(estado);
     }
 
     @GetMapping("/{id}")
