@@ -193,6 +193,11 @@ public class PedidoService {
             return ResponseEntity.status(404).body(response);
         }
 
+        pedido.getPedidoComidas().forEach(pc -> {
+            pc.setEstado(EstadoPedido.CANCELADO);
+            pedidoComidaRepository.save(pc);
+        });
+
         pedido.setEstado(PedidoEnum.CANCELADO);
         pedidoRepository.save(pedido);
 

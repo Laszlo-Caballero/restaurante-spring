@@ -21,6 +21,7 @@ public class PedidoComidaResponse {
     private Integer cantidad;
     private UsuarioRaw usuario;
     private EstadoPedido estado;
+    private Long pedidoComidaId;
 
     public static PedidoComidaResponse fromEntity(PedidoComida pedidoComida) {
         var comidaRaw = ComidaRaw.fromEntity(pedidoComida.getComida());
@@ -29,6 +30,7 @@ public class PedidoComidaResponse {
                 .cantidad(pedidoComida.getCantidad())
                 .usuario(UsuarioRaw.fromEntity(pedidoComida.getUsuario()))
                 .estado(pedidoComida.getEstado())
+                .pedidoComidaId(pedidoComida.getPedidoComidaId())
                 .build();
     }
 
