@@ -9,17 +9,22 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.restaurante.restaurante.pedido.entity.Pedido;
+import com.restaurante.restaurante.pedido.enums.PedidoEnum;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
         @Query("""
                         SELECT p FROM Pedido p
-                        WHERE p.fechaCreacion >= :inicio AND p.fechaCreacion < :fin
+                        WHERE p.fechaCreacion >= :inicio AND p.fechaCreacion < :fin AND p.estado = :estado
                         """)
         List<Pedido> findAllByFechaCreacionHoy(
                         @Param("inicio") LocalDateTime inicio,
-                        @Param("fin") LocalDateTime fin);
+                        @Param("fin") LocalDateTime fin,
+                        @Param("estado") PedidoEnum estado);
 
         @Query("SELECT p FROM Pedido p LEFT JOIN FETCH p.pedidoComidas WHERE p.id = :id")
         Optional<Pedido> findByIdWithItems(@Param("id") Long id);
+
+        @Query("SELECT p FROM Pedido p ORDER BY p.fechaCreacion DESC limit 3")
+        List<Pedido> lastThreeByFecha();
 
 }
