@@ -80,4 +80,24 @@ public class OrdenesService {
 
         return ordenesCache;
     }
+
+    public List<OrderDto> limpiarMesa(Long mesaId) {
+        var ordenesFiltradas = ordenesCache.stream()
+                .map(o -> {
+                    var mId = o.getMesa().getMesaId();
+                    if (mId.equals(mesaId)) {
+                        o.getMesa().setDisponible(true);
+                        o.setOrdenId(null);
+                        o.setComidas(new ArrayList<>());
+                        o.setEstado(EstadoOrden.EN_ESPERA);
+                        return o;
+                    }
+
+                    return o;
+                })
+                .toList();
+        ordenesCache = ordenesFiltradas;
+        return ordenesFiltradas;
+    }
+
 }

@@ -27,4 +27,11 @@ public class OrdenesController {
     public List<OrderDto> obtenerTodasLasOrdenes() {
         return ordenesService.obtenerTodasLasOrdenes();
     }
+
+    @MessageMapping("/limpiar-mesa")
+    @SendTo("/topic/ordenes")
+    public List<OrderDto> limpiarMesa(@Payload Long mesaId) {
+        return ordenesService.limpiarMesa(mesaId);
+    }
+
 }
