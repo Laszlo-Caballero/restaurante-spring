@@ -21,7 +21,6 @@ import com.restaurante.restaurante.pedido.enums.EstadoPedido;
 import com.restaurante.restaurante.pedido.enums.PedidoEnum;
 import com.restaurante.restaurante.pedido.repository.PedidoComidaRepository;
 import com.restaurante.restaurante.pedido.repository.PedidoRepository;
-import com.restaurante.restaurante.pedido.response.PedidoRaw;
 import com.restaurante.restaurante.pedido.response.PedidoResponse;
 import com.restaurante.restaurante.utils.ApiResponse;
 
@@ -36,10 +35,10 @@ public class PedidoService {
     @Autowired
     private PedidoComidaRepository pedidoComidaRepository;
 
-    public ResponseEntity<ApiResponse<List<PedidoRaw>>> listarPedidos() {
+    public ResponseEntity<ApiResponse<List<PedidoResponse>>> listarPedidos() {
         var pedidos = pedidoRepository.findAll();
-        ApiResponse<List<PedidoRaw>> response = new ApiResponse<>(200, "Lista de pedidos",
-                PedidoRaw.toResponse(pedidos));
+        ApiResponse<List<PedidoResponse>> response = new ApiResponse<>(200, "Lista de pedidos",
+                PedidoResponse.toResponse(pedidos));
         return ResponseEntity.ok(response);
     }
 
