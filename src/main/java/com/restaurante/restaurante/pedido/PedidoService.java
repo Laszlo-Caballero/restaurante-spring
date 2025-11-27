@@ -1,6 +1,5 @@
 package com.restaurante.restaurante.pedido;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.restaurante.restaurante.auth.entity.Usuario;
 import com.restaurante.restaurante.comida.respository.ComidaRepository;
@@ -20,7 +20,6 @@ import com.restaurante.restaurante.pedido.entity.PedidoComida;
 import com.restaurante.restaurante.pedido.enums.PedidoEnum;
 import com.restaurante.restaurante.pedido.repository.PedidoComidaRepository;
 import com.restaurante.restaurante.pedido.repository.PedidoRepository;
-import com.restaurante.restaurante.pedido.response.PedidoComidaResponse;
 import com.restaurante.restaurante.pedido.response.PedidoRaw;
 import com.restaurante.restaurante.pedido.response.PedidoResponse;
 import com.restaurante.restaurante.utils.ApiResponse;
@@ -108,55 +107,42 @@ public class PedidoService {
         return ResponseEntity.status(201).body(response);
     }
 
-    public ResponseEntity<ApiResponse<List<PedidoComidaResponse>>> agregarItem(Long id, AgregarItemDto items) {
+    @Transactional
+    public ResponseEntity<ApiResponse<PedidoResponse>> agregarItem(Long id, AgregarItemDto items) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Usuario usuario = (Usuario) authentication.getPrincipal();
 
-        var findPedido = pedidoRepository.findById(id).orElse(null);
+        var findPedido = pedidoRepository.findByIdWithItems(id).orElse(null);
         if (findPedido == null) {
-            ApiResponse<List<PedidoComidaResponse>> response = new ApiResponse<>(404, "Pedido no encontrado", null);
+            ApiResponse<PedidoResponse> response = new ApiResponse<>(404, "Pedido no encontrado", null);
             return ResponseEntity.status(404).body(response);
         }
 
         var estado = findPedido.getEstado();
         if (estado != PedidoEnum.PENDIENTE) {
-            ApiResponse<List<PedidoComidaResponse>> response = new ApiResponse<>(400,
+            ApiResponse<PedidoResponse> response = new ApiResponse<>(400,
                     "No se pueden agregar items a un pedido que no está pendiente", null);
             return ResponseEntity.status(400).body(response);
         }
 
-        var newItems = new ArrayList<PedidoComida>();
-
         for (var item : items.getItems()) {
-            var existing = findPedido.getPedidoComidas().stream()
-                    .filter(pc -> pc.getComida().getComidaId().equals(item.getComidaId()))
-                    .findFirst();
 
-            if (existing.isPresent()) {
-                var pedidoComida = existing.get();
-                int nuevaCantidad = pedidoComida.getCantidad() + item.getCantidad();
-                pedidoComida.setCantidad(nuevaCantidad);
-                pedidoComida.setUsuario(usuario);
-                pedidoComidaRepository.save(pedidoComida);
-                newItems.add(pedidoComida);
-            } else {
-                var nueva = new PedidoComida();
-                var comida = comidaRepository.findById(item.getComidaId())
-                        .orElseThrow(() -> new RuntimeException("Comida no encontrada"));
+            var nueva = new PedidoComida();
+            var comida = comidaRepository.findById(item.getComidaId())
+                    .orElseThrow(() -> new RuntimeException("Comida no encontrada"));
 
-                nueva.setComida(comida);
-                nueva.setCantidad(item.getCantidad());
-                nueva.setPedido(findPedido);
-                nueva.setUsuario(usuario);
-                pedidoComidaRepository.save(nueva);
-                newItems.add(nueva);
-            }
+            nueva.setComida(comida);
+            nueva.setCantidad(item.getCantidad());
+            nueva.setPedido(findPedido);
+            nueva.setUsuario(usuario);
+            pedidoComidaRepository.save(nueva);
+            findPedido.getPedidoComidas().add(nueva);
         }
 
-        ApiResponse<List<PedidoComidaResponse>> response = new ApiResponse<>(200, "Items agregados al pedido",
-                PedidoComidaResponse.toResponse(newItems));
+        ApiResponse<PedidoResponse> response = new ApiResponse<>(200, "Items agregados al pedido",
+                PedidoResponse.fromEntity(findPedido));
         return ResponseEntity.ok(response);
     }
 

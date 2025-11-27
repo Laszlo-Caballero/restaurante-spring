@@ -18,5 +18,5 @@ public class OrderDto {
 
     private List<ComidaOrden> comidas;
 
-    private final EstadoOrden estado = EstadoOrden.EN_ESPERA;
+    private final EstadoOrden estado;
 }

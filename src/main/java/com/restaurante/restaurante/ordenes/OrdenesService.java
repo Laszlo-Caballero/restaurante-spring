@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.restaurante.restaurante.mesas.repository.MesaRepository;
 import com.restaurante.restaurante.mesas.response.MesaRaw;
 import com.restaurante.restaurante.ordenes.dto.OrderDto;
+import com.restaurante.restaurante.ordenes.enums.EstadoOrden;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class OrdenesService {
             var order = OrderDto.builder()
                     .mesa(MesaRaw.fromEntity(m))
                     .comidas(new ArrayList<>())
+                    .estado(EstadoOrden.EN_ESPERA)
                     .build();
             ordenesCache.add(order);
         });
@@ -70,6 +72,8 @@ public class OrdenesService {
             var order = OrderDto.builder()
                     .mesa(MesaRaw.fromEntity(m))
                     .comidas(ordenExistente.getComidas())
+                    .ordenId(ordenExistente.getOrdenId())
+                    .estado(ordenExistente.getEstado())
                     .build();
             return order;
         }).toList();
