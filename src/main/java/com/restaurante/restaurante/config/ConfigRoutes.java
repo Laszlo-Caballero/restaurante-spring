@@ -21,7 +21,9 @@ public class ConfigRoutes {
                         RouteConfig.builder().methods(List.of(HttpMethod.POST))
                                         .path("api/v1/auth/register").build(),
                         RouteConfig.builder().methods(List.of(HttpMethod.DELETE))
-                                        .path("api/v1/usuarios/{id}").build()
-
-        );
+                                        .path("api/v1/usuarios/{id}").build(),
+                        RouteConfig.builder().methods(List.of(HttpMethod.PUT))
+                                        .path("api/v1/usuarios/{id}").build(),
+                        RouteConfig.builder().methods(List.of(HttpMethod.GET))
+                                        .path("api/v1/usuarios/{id}").build());
 }

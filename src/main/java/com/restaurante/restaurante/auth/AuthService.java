@@ -69,7 +69,7 @@ public class AuthService {
 
         if (usuarioRepository.existsByUsername(usuarioDto.getUsername())) {
             return ResponseEntity.status(400)
-                    .body(new ApiResponse<>(400, "Username already exists", null));
+                    .body(new ApiResponse<>(400, "El nombre de usuario ya existe", null));
         }
 
         Usuario newUsuario = usuarioDto.toEntity();
