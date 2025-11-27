@@ -54,17 +54,25 @@ public class OrdenesService {
     }
 
     public List<OrderDto> obtenerTodasLasOrdenes() {
-        log.info("Obteniendo todas las ordenes: {}", ordenesCache.size());
-
         var mesas = mesaRepository.findByDisponibleTrue();
-        mesas.forEach(m -> {
-            ordenesCache.clear();
+        ordenesCache = mesas.stream().map(m -> {
+            var ordenExistente = ordenesCache.stream()
+                    .filter(o -> o.getMesa().getMesaId().equals(m.getMesaId()))
+                    .findFirst()
+                    .orElse(null);
+            if (ordenExistente == null) {
+                var order = OrderDto.builder()
+                        .mesa(MesaRaw.fromEntity(m))
+                        .comidas(new ArrayList<>())
+                        .build();
+                return order;
+            }
             var order = OrderDto.builder()
                     .mesa(MesaRaw.fromEntity(m))
-                    .comidas(new ArrayList<>())
+                    .comidas(ordenExistente.getComidas())
                     .build();
-            ordenesCache.add(order);
-        });
+            return order;
+        }).toList();
 
         return ordenesCache;
     }

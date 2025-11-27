@@ -63,7 +63,8 @@ public class MesaService {
             ApiResponse<Void> response = new ApiResponse<>(404, "Mesa no encontrada", null);
             return ResponseEntity.status(404).body(response);
         }
-        mesaRepository.deleteById(id);
+        mesaExistente.setDisponible(false);
+        mesaRepository.save(mesaExistente);
         ApiResponse<Void> response = new ApiResponse<>(200, "Mesa eliminada exitosamente", null);
         return ResponseEntity.ok(response);
     }
